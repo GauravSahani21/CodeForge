@@ -80,7 +80,7 @@ app.use(errorHandler);
 
 // If in production, let Next.js handle all other requests
 if (!dev) {
-  app.all('*', (req: Request, res: Response) => {
+  app.all('(.*)', (req: Request, res: Response) => {
     return handle(req as any, res as any);
   });
 }
