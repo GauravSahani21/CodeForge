@@ -1,0 +1,26 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+  height: 38px;
+}
+.icon { font-size: 1rem; }
+.select {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: pointer;
+  padding-right: 4px;
+}
+.select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}

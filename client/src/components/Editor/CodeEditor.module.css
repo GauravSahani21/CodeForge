@@ -1,0 +1,16 @@
+.editorWrapper {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #1e1e1e;
+}
+.editorLoading {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-muted);
+  background: #1e1e1e;
+  font-size: 0.875rem;
+}

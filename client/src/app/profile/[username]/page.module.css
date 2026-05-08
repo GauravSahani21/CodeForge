@@ -1,0 +1,96 @@
+.page { padding: 60px 0 100px; min-height: calc(100vh - 60px); position: relative; }
+.notFound { text-align: center; padding: 120px; color: var(--text-secondary); font-size: 1.2rem; }
+.layout { display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: start; }
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 92px; }
+.profileCard {
+  background: rgba(22, 27, 34, 0.4); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05); 
+  border-radius: var(--radius-xl); padding: 40px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.avatar {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; font-weight: 800; color: var(--text-primary); 
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(57, 211, 83, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.1); 
+  border: 1px solid rgba(57, 211, 83, 0.3);
+  margin-bottom: 8px;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.username { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; }
+.bio { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+.joined { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+.statsCard {
+  background: rgba(22, 27, 34, 0.4); 
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05); 
+  border-radius: var(--radius-xl); padding: 24px;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+}
+.stat { text-align: center; }
+.statVal { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.04em; }
+.statKey { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.badgesCard {
+  background: rgba(22, 27, 34, 0.2); 
+  border: 1px solid rgba(255, 255, 255, 0.05); 
+  border-radius: var(--radius-xl); padding: 24px;
+}
+.sectionTitle { font-size: 0.8rem; font-weight: 800; margin-bottom: 16px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.1em; }
+.badgeList { display: flex; flex-direction: column; gap: 8px; }
+.badgeItem {
+  font-size: 0.85rem; padding: 10px 14px;
+  background: rgba(45, 51, 59, 0.3); border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-weight: 600; color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+.badgeItem:hover { border-color: var(--accent-blue); color: var(--text-primary); background: rgba(57, 211, 83, 0.05); }
+
+/* Main */
+.main { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.heatmapCard, .solvedCard {
+  background: rgba(22, 27, 34, 0.4); 
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05); 
+  border-radius: var(--radius-xl); padding: 32px;
+  box-shadow: var(--shadow-lg);
+}
+.cardTitle { font-size: 1.2rem; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.01em; }
+.heatmap { 
+  overflow-x: auto; padding-bottom: 12px;
+  filter: drop-shadow(0 0 10px rgba(57, 211, 83, 0.05));
+}
+.heatmap ::-webkit-scrollbar { height: 4px; }
+.noActivity, .noSolved { color: var(--text-muted); font-size: 1rem; padding: 20px 0; text-align: center; }
+.link { color: var(--accent-blue); font-weight: 600; }
+
+.problemsList { display: flex; flex-direction: column; gap: 8px; }
+.problemRow {
+  display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+  background: rgba(45, 51, 59, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg); transition: all 0.3s ease;
+  text-decoration: none;
+}
+.problemRow:hover { 
+  background: rgba(57, 211, 83, 0.05); 
+  border-color: rgba(57, 211, 83, 0.2);
+  transform: translateX(6px);
+}
+.checkmark { font-size: 1rem; filter: grayscale(1); transition: filter 0.3s ease; }
+.problemRow:hover .checkmark { filter: grayscale(0); }
+.problemTitle { flex: 1; font-size: 1rem; color: var(--text-primary); font-weight: 600; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; width: 100%; }
+}
