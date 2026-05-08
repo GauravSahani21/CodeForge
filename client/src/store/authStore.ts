@@ -28,8 +28,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   loadFromStorage: () => {
     if (typeof window === 'undefined') return;
-    const token = localStorage.getItem('cf_token');
-    const user = localStorage.getItem('cf_user');
+    const token = sessionStorage.getItem('cf_token');
+    const user = sessionStorage.getItem('cf_user');
     if (token && user) set({ token, user: JSON.parse(user) });
   },
 
@@ -37,8 +37,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true });
     try {
       const { data } = await api.post('/auth/login', { email, password });
-      localStorage.setItem('cf_token', data.token);
-      localStorage.setItem('cf_user', JSON.stringify(data.user));
+      sessionStorage.setItem('cf_token', data.token);
+      sessionStorage.setItem('cf_user', JSON.stringify(data.user));
       set({ token: data.token, user: data.user, isLoading: false });
     } catch (err: unknown) {
       set({ isLoading: false });
@@ -52,8 +52,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true });
     try {
       const { data } = await api.post('/auth/signup', { username, email, password });
-      localStorage.setItem('cf_token', data.token);
-      localStorage.setItem('cf_user', JSON.stringify(data.user));
+      sessionStorage.setItem('cf_token', data.token);
+      sessionStorage.setItem('cf_user', JSON.stringify(data.user));
       set({ token: data.token, user: data.user, isLoading: false });
     } catch (err: unknown) {
       set({ isLoading: false });
@@ -64,8 +64,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem('cf_token');
-    localStorage.removeItem('cf_user');
+    sessionStorage.removeItem('cf_token');
+    sessionStorage.removeItem('cf_user');
     set({ user: null, token: null });
   },
 }));
