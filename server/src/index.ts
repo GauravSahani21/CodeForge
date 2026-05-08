@@ -87,19 +87,25 @@ if (!dev) {
 
 // Start server after Next.js is prepared
 const startServer = async () => {
-  if (!dev) {
-    await nextApp.prepare();
-    console.log('✅ Next.js prepared');
-  }
-  
-  app.listen(PORT as number, '0.0.0.0', () => {
-    console.log(`🚀 CodeForge combined server running on port ${PORT}`);
-    if (dev) {
-      console.log(`📡 API available at http://localhost:${PORT}/api`);
-    } else {
-      console.log(`🌍 App available at port ${PORT}`);
+  try {
+    if (!dev) {
+      console.log('⏳ Preparing Next.js...');
+      await nextApp.prepare();
+      console.log('✅ Next.js prepared');
     }
-  });
+    
+    app.listen(PORT as number, '0.0.0.0', () => {
+      console.log(`🚀 CodeForge combined server running on port ${PORT}`);
+      if (dev) {
+        console.log(`📡 API available at http://localhost:${PORT}/api`);
+      } else {
+        console.log(`🌍 App available at port ${PORT}`);
+      }
+    });
+  } catch (err) {
+    console.error('❌ Server failed to start:', err);
+    process.exit(1);
+  }
 };
 
 startServer();
