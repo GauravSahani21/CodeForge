@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
@@ -81,7 +81,7 @@ app.use(errorHandler);
 // If in production, let Next.js handle all other requests
 if (!dev) {
   app.all('*', (req: Request, res: Response) => {
-    return handle(req, res);
+    return handle(req as any, res as any);
   });
 }
 

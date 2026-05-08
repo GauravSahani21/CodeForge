@@ -11,7 +11,7 @@ const problemSchema = z.object({
   constraints: z.string().optional(),
   examples: z.array(z.object({ input: z.string(), output: z.string(), explanation: z.string().optional() })),
   testCases: z.array(z.object({ input: z.string(), expectedOutput: z.string(), isHidden: z.boolean().default(false) })),
-  starterTemplates: z.record(z.string()).optional(),
+  starterTemplates: z.record(z.string(), z.string()).optional(),
   hints: z.array(z.string()).optional(),
 });
 
