@@ -21,7 +21,7 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
     res.json(result);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      res.status(400).json({ error: err.errors[0].message });
+      res.status(400).json({ error: err.issues[0].message });
       return;
     }
     console.error('Execution Error:', err instanceof Error ? err.message : err);

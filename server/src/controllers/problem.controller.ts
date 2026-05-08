@@ -59,10 +59,10 @@ export const getProblemBySlug = async (req: Request, res: Response): Promise<voi
 export const createProblem = async (req: Request & { user?: { id: string } }, res: Response): Promise<void> => {
   try {
     const data = problemSchema.parse(req.body);
-    const problem = await Problem.create({ ...data, createdBy: req.user!.id });
+    const problem = await Problem.create({ ...data, createdBy: req.user!.id } as any);
     res.status(201).json(problem);
   } catch (err) {
-    if (err instanceof z.ZodError) { res.status(400).json({ error: err.errors[0].message }); return; }
+    if (err instanceof z.ZodError) { res.status(400).json({ error: err.issues[0].message }); return; }
     res.status(500).json({ error: 'Failed to create problem' });
   }
 };

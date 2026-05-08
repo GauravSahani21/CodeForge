@@ -56,7 +56,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      res.status(400).json({ error: err.errors[0].message });
+      res.status(400).json({ error: err.issues[0].message });
       return;
     }
     res.status(500).json({ error: 'Signup failed' });
@@ -80,7 +80,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      res.status(400).json({ error: err.errors[0].message });
+      res.status(400).json({ error: err.issues[0].message });
       return;
     }
     res.status(500).json({ error: 'Login failed' });
@@ -131,7 +131,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
     res.json({ message: 'If an account with that email exists, an OTP has been sent.' });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      res.status(400).json({ error: err.errors[0].message });
+      res.status(400).json({ error: err.issues[0].message });
       return;
     }
     console.error('forgotPassword error:', err);
@@ -172,7 +172,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     res.json({ message: 'Password reset successfully! You can now log in with your new password.' });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      res.status(400).json({ error: err.errors[0].message });
+      res.status(400).json({ error: err.issues[0].message });
       return;
     }
     console.error('resetPassword error:', err);

@@ -41,7 +41,7 @@ if (process.env.CLIENT_URL) {
 }
 
 app.use(cors({ 
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
@@ -73,14 +73,14 @@ app.use('/api/execute', executeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/learn', learnRoutes);
 
-app.get('/api/health', (_req, res) => res.json({ status: 'OK', uptime: process.uptime() }));
+app.get('/api/health', (_req: Request, res: Response) => res.json({ status: 'OK', uptime: process.uptime() }));
 
 // Error handler
 app.use(errorHandler);
 
 // If in production, let Next.js handle all other requests
 if (!dev) {
-  app.all('*', (req, res) => {
+  app.all('*', (req: Request, res: Response) => {
     return handle(req, res);
   });
 }
