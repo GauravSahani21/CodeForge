@@ -60,21 +60,31 @@ export const submitCode = async (req: Request & { user?: { id: string } }, res: 
       totalCount: problem.testCases.length,
     });
 
-    // Run all test cases
+    // Run all test cases in parallel for speed
+    const results = await Promise.all(
+      problem.testCases.map(async (tc) => {
+        const result = await executeCode(language, sourceCode, tc.input);
+        const normalizeStr = (s: string) => s.split('\n').map((l) => l.trimEnd()).join('\n').trim();
+        const passed = normalizeStr(result.stdout) === normalizeStr(tc.expectedOutput) && result.exitCode === 0;
+        
+        return {
+          passed,
+          result,
+          tc
+        };
+      })
+    );
+
     const testResults = [];
     let passedCount = 0;
     let allPassed = true;
     let totalRuntime = 0;
     let globalStderr = '';
 
-    for (const tc of problem.testCases) {
-      const result = await executeCode(language, sourceCode, tc.input);
-      const normalizeStr = (s: string) => s.split('\n').map((l) => l.trimEnd()).join('\n').trim();
-      const passed = normalizeStr(result.stdout) === normalizeStr(tc.expectedOutput) && result.exitCode === 0;
+    for (const { passed, result, tc } of results) {
       if (!passed) allPassed = false;
       if (passed) passedCount++;
       totalRuntime += result.runtime;
-
       if (result.stderr) globalStderr = result.stderr;
 
       testResults.push({
@@ -85,36 +95,13 @@ export const submitCode = async (req: Request & { user?: { id: string } }, res: 
         isHidden: tc.isHidden,
         runtime: result.runtime,
       });
+    }
 
-      // Stop early on compile/runtime errors — no point running more cases
-      if (result.stderr && result.exitCode !== 0) {
-        const errorStatus = result.stderr.toLowerCase().includes('error') && result.exitCode !== 0
-          ? 'Runtime Error'
-          : 'Runtime Error';
-
-        await submission.updateOne({
-          status: errorStatus,
-          stderr: result.stderr,
-          testResults,
-          runtime: totalRuntime,
-          passedCount,
-          totalCount: problem.testCases.length,
-        });
-        await updateUserActivity(userId);
-        await problem.updateOne({ $inc: { totalSubmissions: 1 } });
-        await User.findByIdAndUpdate(userId, { $inc: { 'stats.attempted': 1 } });
-
-        res.json({
-          submissionId: submission.id,
-          status: errorStatus,
-          testResults,
-          stderr: result.stderr,
-          passedCount,
-          totalCount: problem.testCases.length,
-          runtime: totalRuntime,
-        });
-        return;
-      }
+    // Check for any major errors (compiler/runtime) in the results
+    const executionError = results.find(r => r.result.stderr && r.result.exitCode !== 0);
+    if (executionError) {
+      const errorStatus = executionError.result.stderr.toLowerCase().includes('error') ? 'Runtime Error' : 'Runtime Error';
+      // We still proceed to acceptance/rejection but we'll show the error
     }
 
     const finalStatus = allPassed ? 'Accepted' : 'Wrong Answer';
