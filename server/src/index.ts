@@ -12,13 +12,21 @@ import learnRoutes from './routes/learn.routes';
 import { errorHandler } from './middleware/error.middleware';
 import rateLimit from 'express-rate-limit';
 
+import path from 'path';
+import next from 'next';
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const dev = process.env.NODE_ENV !== 'production';
 
 // Connect DB
 connectDB();
+
+// Initialize Next.js app
+const nextApp = next({ dev, dir: path.join(__dirname, '../../client') });
+const handle = nextApp.getRequestHandler();
 
 // Middleware
 const allowedOrigins = [
@@ -57,7 +65,7 @@ app.use('/api', limiter);
 app.use('/api/execute', executeLimiter);
 app.use('/api/submissions', executeLimiter);
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/problems', problemRoutes);
 app.use('/api/submissions', submissionRoutes);
@@ -70,8 +78,30 @@ app.get('/api/health', (_req, res) => res.json({ status: 'OK', uptime: process.u
 // Error handler
 app.use(errorHandler);
 
-app.listen(PORT as number, '0.0.0.0', () => {
-  console.log(`🚀 CodeForge server running on http://0.0.0.0:${PORT}`);
-});
+// If in production, let Next.js handle all other requests
+if (!dev) {
+  app.all('*', (req, res) => {
+    return handle(req, res);
+  });
+}
+
+// Start server after Next.js is prepared
+const startServer = async () => {
+  if (!dev) {
+    await nextApp.prepare();
+    console.log('✅ Next.js prepared');
+  }
+  
+  app.listen(PORT as number, '0.0.0.0', () => {
+    console.log(`🚀 CodeForge combined server running on port ${PORT}`);
+    if (dev) {
+      console.log(`📡 API available at http://localhost:${PORT}/api`);
+    } else {
+      console.log(`🌍 App available at port ${PORT}`);
+    }
+  });
+};
+
+startServer();
 
 export default app;

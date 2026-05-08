@@ -5,8 +5,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  // Use environment variable or fallback to local
-  config.baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  // Automatic base URL detection: Use env var, or fallback based on environment
+  config.baseURL = process.env.NEXT_PUBLIC_API_URL || 
+    (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000/api' 
+      : '/api');
 
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('cf_token');
